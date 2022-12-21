@@ -1,0 +1,71 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df=pd.read_csv("SampleSuperstore.csv")
+df.head()
+df.tail()
+df.info()
+df.shape
+
+df.duplicated().value_counts()
+df.drop_duplicates(inplace=True)
+df.shape
+corr = df.corr()
+sns.heatmap(corr,annot=True,cmap='Reds')
+
+duplicates=df.duplicated()
+duplicates.sum()
+
+df.drop_duplicates(inplace=True)
+
+duplicates=df.duplicated()
+duplicates.sum()
+
+corr = df.corr()
+sns.heatmap(corr, annot=True, cmap="Blues")
+
+plt.figure(figsize=(10,8))
+sns.barplot(x='Discount', y='Profit', color='red', data=df)
+plt.show()
+
+plt.figure(figsize=(10,8))
+sns.barplot(x='Quantity', y='Profit', color='green', data=df)
+plt.show()
+
+plt.figure(figsize=(16,8))
+chart=sns.countplot(x='State', data=df, order=df['State'].value_counts().index)
+chart.set_xticklabels(chart.get_xticklabels(), rotation=90)
+chart.set_xlabel("State", fontsize=16)
+plt.show()
+
+pie=df.groupby('Category')['Sales'].sum().sort_values(ascending=False)
+plt.figure(figsize=(10,8))
+color=['green', 'blue', 'red']
+pie.plot.pie(autopct="%1.1f%%", colors=color, shadow=True)
+plt.title('Category sales')
+
+sns.pairplot(df, hue = 'Category', diag_kind='kde')
+
+df_loss=df[df['Profit']<0]
+df_profit=df[df['Profit']>0]
+plt.figure(figsize=(14,8))
+axes=plt.subplot(121)
+sns.barplot(x='Ship Mode', y='Profit', data=df_profit, palette="summer")
+
+plt.figure(figsize=(14,8))
+sub_ca_count=sns.countplot(x='Sub-Category', data=df, order=df['Sub-Category'].value_counts().index, palette= 'BuGn_r')
+sub_ca_count.set_xticklabels(sub_ca_count.get_xticklabels(), rotation=90)
+sub_ca_count.set_xlabel("Sub-Category", fontsize=16)
+plt.show()
+
+x=df_profit.groupby('Sub-Category')['Profit'].sum().sort_values(ascending=False)
+plt.figure(figsize=(10,8))
+x.plot.bar()
+plt.title('Sub Category Plot')
+plt.show()
+
+y=df.groupby('Segment')[['Sales', 'Profit']].sum()
+y.plot.bar()
+plt.show()
